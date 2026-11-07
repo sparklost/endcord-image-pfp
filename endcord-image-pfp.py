@@ -6,16 +6,11 @@ import queue
 import sys
 import threading
 
-from endcord import formatter, peripherals, tui, utils
-
-if tui.uses_gtkcurses:
-    from endcord import gtkcurses as terminal_utils
-else:
-    from endcord import terminal_utils
+from endcord import formatter, peripherals, terminal_utils, tui, utils
 
 EXT_NAME = "Image PFP"
-EXT_VERSION = "0.1.0"
-EXT_ENDCORD_VERSION = "1.5.2"
+EXT_VERSION = "0.1.1"
+EXT_ENDCORD_VERSION = "1.6.0"
 EXT_DESCRIPTION = "An extension that adds drawing rounded profile pictures in the chat using kitty protocol"
 EXT_SOURCE = "https://github.com/sparklost/endcord-image-pfp"
 logger = logging.getLogger(__name__)
@@ -23,6 +18,7 @@ support_media = importlib.util.find_spec("PIL") is not None
 
 START_IMAGE_ID = 5500
 IMAGE_SIZES = [16, 20, 22, 24, 28, 32, 40, 44, 48, 56, 60, 64, 80, 96, 100, 128, 160, 240, 254]
+
 
 def check_kitty():
     """Check if kitty protocol is supported"""
@@ -99,8 +95,8 @@ class Extension:
         self.tui = app.tui
         self.run = True
         kitty_supported = getattr(self.tui, "kitty_supported", None)
-        if kitty_supported is False or (kitty_supported is not True and not check_kitty()):
-            logger.warning("No kitty protocol support detected in this terminal")
+        if tui.uses_gtkcurses or kitty_supported is False or (kitty_supported is not True and not check_kitty()):
+            logger.warning("No kitty image protocol support detected in this terminal")
             self.run = False
         self.cell_w, self.cell_h = terminal_utils.get_font_size()
         self.ratio = self.cell_h
