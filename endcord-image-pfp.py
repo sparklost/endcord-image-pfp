@@ -9,7 +9,7 @@ import threading
 from endcord import formatter, peripherals, terminal_utils, tui, utils
 
 EXT_NAME = "Image PFP"
-EXT_VERSION = "0.1.1"
+EXT_VERSION = "0.1.2"
 EXT_ENDCORD_VERSION = "1.6.0"
 EXT_DESCRIPTION = "An extension that adds drawing rounded profile pictures in the chat using kitty protocol"
 EXT_SOURCE = "https://github.com/sparklost/endcord-image-pfp"
