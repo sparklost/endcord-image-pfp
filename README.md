@@ -22,9 +22,8 @@ Note that many options can significantly impact RAM and CPU usage.
 - `ext_image_pfp_antialias = True`  
     Antialias circle edge if `ext_image_pfp_round` is `True`.  
     After toggling this, delete `pfp-small` directory in endcord cache to apply this option.
-- `ext_image_pfp_max_cache_age = None`  
-    If this key exists, it will override endcord builtin value from `max_thumb_cache_age` only for pfp cache.  
-    Images not used for more than this many days will be deleted on endcord startup.
+- `max_thumb_cache_age = 7`  
+    How long to keep cached thumbs for inline images, in days. Set `0` to clear on each new run.
 - `ext_image_pfp_format_message_shift = [0, 5]`  
     Insert spaces to `format_message` from endcord them config (also to `format_message_color`) to make space for pfp image.  
     Leave like this if you did not change `format_message` in theme.  

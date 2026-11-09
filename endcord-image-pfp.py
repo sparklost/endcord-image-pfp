@@ -114,7 +114,6 @@ class Extension:
         self.antialias = app.config.get("ext_image_pfp_antialias", True)
         message_shift = app.config.get("ext_image_pfp_format_message_shift", (0, 5))
         format_message = app.config["format_message"]
-        max_cache_age = app.config.get("ext_image_pfp_max_cache_age", app.config["max_thumb_cache_age"])
         app.formatter.format_message = format_message[:message_shift[0]] + (" " * message_shift[1]) + format_message[message_shift[0]:]
         app.formatter.color_message = formatter.shift_formats(app.formatter.color_message, message_shift[0], message_shift[1])
         app.formatter.color_mention_message = formatter.shift_formats(app.formatter.color_mention_message, message_shift[0], message_shift[1])
@@ -152,9 +151,13 @@ class Extension:
         self.image_cache_lock = threading.Lock()
         self.download_queue = queue.Queue()
 
-        threading.Thread(target=utils.delete_old_files, daemon=True, args=(os.path.join(peripherals.cache_path, "pfp-small"), max_cache_age, True)).start()
         threading.Thread(target=self.downloader, daemon=True).start()
         threading.Thread(target=self.worker, daemon=True).start()
+
+
+    def on_main(self):
+        """Store my avatar id"""
+        self.my_avatar_id = self.app.my_user_data["extra"].get("my_avatar_id")
 
 
     def on_chat_update(self, chat, chat_format, chat_map):   # noqa
@@ -246,6 +249,8 @@ class Extension:
                     message_id = message["id"]
                     user_id = message["user_id"]
                     avatar_id = message.get("avatar")
+                    if not avatar_id and user_id == self.app.my_id:
+                        avatar_id = self.my_avatar_id
                 except IndexError:
                     continue
                 if not user_id:
